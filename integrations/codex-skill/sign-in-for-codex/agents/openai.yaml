@@ -1,0 +1,4 @@
+interface:
+  display_name: "Sign In for Codex"
+  short_description: "Finish provider sign-ins safely from Codex"
+  default_prompt: "Use $sign-in-for-codex when a command is blocked waiting for me to finish a provider sign-in."

@@ -1,0 +1,59 @@
+{
+  "name": "sign-in-for-codex",
+  "version": "0.1.0-alpha.0",
+  "description": "Finish the sign-ins Codex gets stuck on without pasting passwords into chat.",
+  "type": "module",
+  "private": true,
+  "bin": {
+    "sign-in-for-codex": "dist/cli/index.js"
+  },
+  "files": [
+    "dist/",
+    "public/",
+    "integrations/",
+    "docs/",
+    "LICENSE",
+    "NOTICE",
+    "PROVENANCE.md",
+    "README.md",
+    "SECURITY.md"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "check": "npm run lint && npm run typecheck && npm test && npm run build",
+    "docs:list": "node scripts/docs-list.mjs",
+    "lint": "eslint .",
+    "test": "npm run test:compile && node --test --test-concurrency=1 dist-test/test/*.test.js dist-test/test/integration/*.test.js",
+    "test:integration": "npm run test:compile && node --test --test-concurrency=1 dist-test/test/integration/*.test.js",
+    "test:compile": "tsc -p tsconfig.test.json",
+    "typecheck": "tsc --noEmit",
+    "audit:public": "node scripts/audit-public-boundary.mjs",
+    "prepack": "npm run check && npm run audit:public"
+  },
+  "keywords": [
+    "codex",
+    "oauth",
+    "device-code",
+    "human-in-the-loop",
+    "macos"
+  ],
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/benziony/sign-in-for-codex.git"
+  },
+  "bugs": {
+    "url": "https://github.com/benziony/sign-in-for-codex/issues"
+  },
+  "homepage": "https://github.com/benziony/sign-in-for-codex#readme",
+  "devDependencies": {
+    "@eslint/js": "^9.34.0",
+    "@types/node": "^24.3.0",
+    "eslint": "^9.34.0",
+    "typescript": "^5.9.2",
+    "typescript-eslint": "^8.41.0"
+  }
+}

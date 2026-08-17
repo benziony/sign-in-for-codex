@@ -1,0 +1,28 @@
+name: Bug report
+description: Report a reproducible problem without sharing sign-in details
+title: "[Bug]: "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: Do not include approval URLs, codes, cookies, credentials, tokens, or private logs.
+  - type: textarea
+    id: behavior
+    attributes:
+      label: What happened?
+      description: Describe the expected and actual lifecycle behavior using synthetic details.
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      placeholder: 0.1.0
+    validations:
+      required: true
+  - type: input
+    id: platform
+    attributes:
+      label: macOS and Node versions
+    validations:
+      required: true

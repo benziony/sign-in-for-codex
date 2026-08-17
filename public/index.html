@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light">
+    <title>Sign In for Codex</title>
+    <link rel="stylesheet" href="/assets/styles.css">
+    <script src="/assets/app.js" type="module"></script>
+  </head>
+  <body>
+    <main class="shell">
+      <header class="masthead">
+        <div class="mark" aria-hidden="true">↗</div>
+        <div>
+          <p class="eyebrow">LOCAL SIGN-IN HANDOFF</p>
+          <h1>Sign In for Codex</h1>
+          <p class="lede">Finish the sign-ins Codex gets stuck on—without pasting passwords into chat.</p>
+        </div>
+      </header>
+
+      <section class="notice" aria-label="Safety note">
+        <strong>You sign in with the provider.</strong>
+        <span>This page shows the provider’s own approval link. It does not collect or store your password.</span>
+      </section>
+
+      <section aria-labelledby="requests-heading">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">WAITING FOR YOU</p>
+            <h2 id="requests-heading">Sign-in requests</h2>
+          </div>
+          <button class="quiet-button" id="refresh" type="button">Refresh</button>
+        </div>
+        <div id="status" class="status" role="status" aria-live="polite">Connecting to the local helper…</div>
+        <div id="requests" class="request-list"></div>
+      </section>
+
+      <footer>
+        <span>Runs locally on this Mac</span>
+        <span aria-hidden="true">·</span>
+        <span>Unofficial and independent from OpenAI</span>
+      </footer>
+    </main>
+  </body>
+</html>
