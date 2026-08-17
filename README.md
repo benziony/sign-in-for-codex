@@ -27,8 +27,8 @@ Sign In for Codex gives that moment a small, explicit handoff:
 4. Codex reruns the blocked operation and verifies that access works.
 
 Provider-native approval comes first. A private browser and encrypted macOS
-Keychain fallback are planned behind separate security gates; this initial
-alpha deliberately fails closed when a reusable secret would be required.
+Keychain fallback are planned behind separate security gates; version `0.1.0`
+deliberately fails closed when a reusable secret would be required.
 
 ## Current status
 
