@@ -3,24 +3,19 @@
 The installed skill triggers when Codex is blocked by a login, OAuth approval,
 device code, MFA prompt, or credential request.
 
-The provider payload travels through standard input:
+Start the CLI with a writable standard input stream:
 
 ```bash
-sign-in-for-codex request provider --stdin --wait <<'JSON'
-{
-  "provider": "Example Provider",
-  "action": "Approve repository access",
-  "url": "https://login.example.test/approve",
-  "deviceCode": "ABCD-EFGH",
-  "instructions": "Open the provider and enter the code.",
-  "expiresInSeconds": 900
-}
-JSON
+sign-in-for-codex request provider --stdin --wait
 ```
 
-Do not put provider URLs, codes, instructions, credentials, or capability
-material in argv. The CLI intentionally has no `--url`, `--code`, or `--secret`
-option.
+The invoking agent writes one JSON object directly to that process's stdin and
+closes the stream. The object contains `provider`, `action`, HTTPS `url`,
+`expiresInSeconds`, and optional `deviceCode` or `instructions`.
+
+Do not interpolate provider URLs, codes, instructions, credentials, or
+capability material into a shell command, `printf`, heredoc, environment
+variable, temporary file, or argv. The CLI accepts no provider-detail options.
 
 After the result is `completed`, rerun the blocked provider or CLI operation.
 Only that downstream check proves authentication succeeded.

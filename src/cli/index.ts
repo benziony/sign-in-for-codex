@@ -88,10 +88,11 @@ async function main(): Promise<void> {
     return;
   }
   if (command === "request" && args[1] === "provider") {
-    if (!args.includes("--stdin")) throw new Error("provider requests require --stdin");
-    if (args.some((entry) => ["--url", "--code", "--secret", "--password"].includes(entry))) {
-      throw new Error("sensitive provider details are not accepted in command arguments");
+    const allowed = new Set(["request", "provider", "--stdin", "--wait"]);
+    if (args.some((entry) => !allowed.has(entry))) {
+      throw new Error("provider requests accept only --stdin and optional --wait");
     }
+    if (!args.includes("--stdin")) throw new Error("provider requests require --stdin");
     const input = fs.readFileSync(0);
     if (input.length === 0 || input.length > 16 * 1024) throw new Error("provider request stdin is missing or too large");
     const payload: unknown = JSON.parse(input.toString("utf8"));

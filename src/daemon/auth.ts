@@ -29,7 +29,7 @@ function token(bytes = 32): string {
 export class BrowserAuth {
   readonly bootstraps = new Map<string, Bootstrap>();
   readonly sessions = new Map<string, Session>();
-  readonly actions = new Map<string, Buffer>();
+  readonly actions = new Map<string, number>();
 
   constructor(
     readonly now: () => number = () => Date.now(),
@@ -39,6 +39,7 @@ export class BrowserAuth {
 
   createBootstrap(): string {
     this.prune();
+    this.evictOldest(this.bootstraps, 64);
     const value = token();
     const id = token(12);
     this.bootstraps.set(id, { digest: digest(value), expiresAt: this.now() + 60_000 });
@@ -59,6 +60,7 @@ export class BrowserAuth {
 
   createSession(identity: string, secure: boolean): { cookie: string; csrf: string } {
     this.prune();
+    this.evictOldest(this.sessions, 64);
     const cookie = token();
     const csrf = token(24);
     const key = token(12);
@@ -89,16 +91,20 @@ export class BrowserAuth {
   }
 
   issueAction(sessionCookie: string, requestId: string): string {
+    this.prune();
+    this.evictOldest(this.actions, 256);
     const value = token(24);
-    this.actions.set(`${sessionCookie}:${requestId}`, digest(value));
+    this.actions.set(`${sessionCookie}:${requestId}:${value}`, this.now() + 60_000);
     return value;
   }
 
   consumeAction(sessionCookie: string, requestId: string, value: string | undefined): boolean {
-    const key = `${sessionCookie}:${requestId}`;
-    const expected = this.actions.get(key);
+    this.prune();
+    if (!value) return false;
+    const key = `${sessionCookie}:${requestId}:${value}`;
+    const expiresAt = this.actions.get(key);
     this.actions.delete(key);
-    return Boolean(expected && value && sameDigest(expected, digest(value)));
+    return expiresAt !== undefined && expiresAt > this.now();
   }
 
   checkCsrf(session: Session, value: string | undefined): boolean {
@@ -127,6 +133,17 @@ export class BrowserAuth {
           if (actionKey.startsWith(prefix)) this.actions.delete(actionKey);
         }
       }
+    }
+    for (const [key, expiresAt] of this.actions) {
+      if (expiresAt <= now) this.actions.delete(key);
+    }
+  }
+
+  private evictOldest<Value>(values: Map<string, Value>, maximum: number): void {
+    while (values.size >= maximum) {
+      const oldest = values.keys().next().value as string | undefined;
+      if (oldest === undefined) return;
+      values.delete(oldest);
     }
   }
 }

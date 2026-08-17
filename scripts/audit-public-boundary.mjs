@@ -4,6 +4,19 @@ import process from "node:process";
 
 const root = process.cwd();
 const included = ["src", "public", "integrations", "docs", "scripts", "test", ".github"];
+const rootFiles = [
+  ".env.example",
+  "AGENT.md",
+  "AGENTS.md",
+  "CHANGELOG.md",
+  "CONTRIBUTING.md",
+  "NOTICE",
+  "PROVENANCE.md",
+  "README.md",
+  "SECURITY.md",
+  "package.json",
+  "package-lock.json"
+];
 const textExtensions = new Set([".js", ".json", ".md", ".ts", ".yaml", ".yml", ".html", ".css", ".example"]);
 const blocked = [
   /credential[ -]?inbox/i,
@@ -24,8 +37,8 @@ function files(directory) {
 }
 
 const findings = [];
-for (const directory of included) {
-  for (const file of files(path.join(root, directory))) {
+for (const target of [...included.map((directory) => path.join(root, directory)), ...rootFiles.map((file) => path.join(root, file))]) {
+  for (const file of fs.statSync(target).isDirectory() ? files(target) : [target]) {
     if (!textExtensions.has(path.extname(file)) && path.basename(file) !== ".env.example") continue;
     const source = fs.readFileSync(file, "utf8");
     for (const pattern of blocked) {

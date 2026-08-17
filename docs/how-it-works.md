@@ -27,8 +27,8 @@ It is a handoff surface, not an identity provider.
 the provider accepted the login, the requested scope was granted, or the CLI
 stored a usable credential. The invoking Codex workflow must verify those facts.
 
-## Current alpha boundary
+## Current release boundary
 
-The first alpha handles provider-owned approval and device-code flows. It does
+Version `0.1.0` handles provider-owned approval and device-code flows. It does
 not collect reusable passwords. Supervised-browser and encrypted Keychain
 fallbacks remain unavailable until their separate security reviews pass.

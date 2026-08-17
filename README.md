@@ -32,9 +32,9 @@ alpha deliberately fails closed when a reusable secret would be required.
 
 ## Current status
 
-`0.1.0-alpha.0` is a private staging release under active security review. It
-implements provider approval and device-code handoff on macOS. Do not treat it
-as production-ready until the repository is public and `0.1.0` is released.
+Version `0.1.0` implements provider approval and device-code handoff on macOS.
+It intentionally does not collect reusable passwords or depend on 1Password,
+another password manager, or a hosted credential service.
 
 ## Safety model
 
@@ -60,13 +60,13 @@ npm run check
 npm pack --json
 ```
 
-The package remains marked `private` during staging so it cannot be published
-to npm accidentally.
+The release artifact is an npm-compatible tarball attached to GitHub Releases.
+The npm registry is not required.
 
-## Install (after the public release)
+## Install
 
 ```bash
-npm install -g sign-in-for-codex
+npm install -g https://github.com/benziony/sign-in-for-codex/releases/download/v0.1.0/sign-in-for-codex-0.1.0.tgz
 sign-in-for-codex install
 sign-in-for-codex doctor --json
 ```
@@ -77,16 +77,17 @@ use `sudo`, and does not configure Tailscale automatically.
 ## Use from Codex
 
 The installer adds a small Codex skill. When a provider login blocks work, the
-skill sends the provider details through standard input:
+skill starts this command with a writable standard input stream:
 
 ```bash
-printf '%s' "$PROVIDER_APPROVAL_JSON" | \
-  sign-in-for-codex request provider --stdin --wait
+sign-in-for-codex request provider --stdin --wait
 ```
 
-Sensitive provider details must never be placed in command arguments. After
-you press **I'm done**, Codex still has to rerun the blocked command. A click is
-not proof that authentication succeeded.
+Codex writes one JSON object directly to that process's standard input and then
+closes the stream. It must not interpolate the payload into a shell command,
+shell variable, `printf`, heredoc, environment variable, or temporary file.
+After you press **I'm done**, Codex still has to rerun the blocked command. A
+click is not proof that authentication succeeded.
 
 ## Uninstall
 

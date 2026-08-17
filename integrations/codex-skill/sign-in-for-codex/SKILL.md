@@ -12,19 +12,22 @@ arguments, logs, and durable files.
    approval flow. Do not ask for a password when one of those works.
 2. Build one JSON object in memory with `provider`, `action`, HTTPS `url`,
    `expiresInSeconds`, and optional `deviceCode` or `instructions`.
-3. Pipe that object through standard input:
+3. Start the CLI with a writable standard input stream:
 
    ```bash
-   printf '%s' "$PROVIDER_APPROVAL_JSON" | sign-in-for-codex request provider --stdin --wait
+   sign-in-for-codex request provider --stdin --wait
    ```
 
-4. Tell the user plainly: “I need you to finish signing in to PROVIDER. Open
+4. Write the JSON object directly to that process's stdin and close the stream.
+   Do not interpolate it into a shell command, `printf`, heredoc, environment
+   variable, or temporary file.
+5. Tell the user plainly: “I need you to finish signing in to PROVIDER. Open
    Sign In for Codex on your Mac.” Never paste the approval URL or code into
    chat.
-5. Treat `completed` as the user's claim that the provider flow is finished,
+6. Treat `completed` as the user's claim that the provider flow is finished,
    not proof of access. Rerun the exact blocked operation and verify success.
 
 Fail closed if the provider does not offer a safe approval flow or if the local
 helper is unavailable. Do not move sensitive values into command arguments,
-temporary files, environment variables, Git, issue trackers, or alternate chat
-messages as a workaround.
+command text, temporary files, environment variables, Git, issue trackers, or
+alternate chat messages as a workaround.

@@ -2,10 +2,7 @@
 
 ## Supported versions
 
-No version is supported yet. The repository is in private alpha until `0.1.0`
-passes the publication security gate.
-
-After `0.1.0`, the latest minor release will receive security fixes. Older
+Version `0.1.x` receives security fixes. Older
 releases may be asked to upgrade before a fix is backported.
 
 ## Reporting a vulnerability
